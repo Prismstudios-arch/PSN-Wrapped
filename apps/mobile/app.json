@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "PSN Wrapped",
+    "slug": "psn-wrapped",
+    "scheme": "psnwrapped",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "backgroundColor": "#0B0B12",
+    "icon": "./assets/icon.png",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.psnwrapped.app",
+      "userInterfaceStyle": "dark"
+    },
+    "android": {
+      "package": "com.psnwrapped.app",
+      "userInterfaceStyle": "dark",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B0B12"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0B0B12",
+          "resizeMode": "contain",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "savePhotosPermission": "PSN Wrapped saves your recap images to your photo library so you can share them.",
+          "photosPermission": "PSN Wrapped needs photo access to save your recap images.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiBaseUrl": "http://localhost:4000",
+      "_comment_brand": "PSN Wrapped has its OWN identity (Midnight Aurora). Do NOT use PlayStation brand blue/logos. Icon/splash assets still to be designed.",
+      "_comment_disclaimer": "Not affiliated with or endorsed by Sony Interactive Entertainment."
+    }
+  }
+}

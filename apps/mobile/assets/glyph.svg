@@ -1,0 +1,23 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C5CFF"/>
+      <stop offset="0.52" stop-color="#19E3C2"/>
+      <stop offset="1" stop-color="#FF5DA2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- transparent background; glyph sits inside the adaptive-icon safe zone -->
+
+  <!-- back card (stack) -->
+  <g transform="rotate(-13 480 496)">
+    <rect x="356" y="372" width="272" height="272" rx="78" fill="#15151F"/>
+    <rect x="356" y="372" width="272" height="272" rx="78" fill="none" stroke="url(#aurora)" stroke-width="6" stroke-opacity="0.85"/>
+  </g>
+
+  <!-- front card -->
+  <g transform="rotate(6 524 524)">
+    <rect x="384" y="384" width="280" height="280" rx="82" fill="url(#aurora)"/>
+    <path d="M 476 452 L 476 596 L 600 524 Z" fill="#0B0B12"/>
+  </g>
+</svg>

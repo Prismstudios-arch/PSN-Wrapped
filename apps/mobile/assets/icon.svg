@@ -1,0 +1,42 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C5CFF"/>
+      <stop offset="0.52" stop-color="#19E3C2"/>
+      <stop offset="1" stop-color="#FF5DA2"/>
+    </linearGradient>
+    <radialGradient id="glowV" cx="0.24" cy="0.18" r="0.75">
+      <stop offset="0" stop-color="#7C5CFF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#7C5CFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowP" cx="0.82" cy="0.86" r="0.8">
+      <stop offset="0" stop-color="#FF5DA2" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#FF5DA2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowT" cx="0.5" cy="0.5" r="0.45">
+      <stop offset="0" stop-color="#19E3C2" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#19E3C2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- base -->
+  <rect width="1024" height="1024" fill="#0B0B12"/>
+  <rect width="1024" height="1024" fill="url(#glowV)"/>
+  <rect width="1024" height="1024" fill="url(#glowP)"/>
+  <!-- aurora glow behind the cards -->
+  <ellipse cx="512" cy="500" rx="360" ry="360" fill="url(#glowT)"/>
+  <ellipse cx="512" cy="500" rx="300" ry="300" fill="url(#aurora)" opacity="0.28"/>
+
+  <!-- back card (the "stack" → wrapped/recap) -->
+  <g transform="rotate(-13 470 480)">
+    <rect x="300" y="300" width="372" height="372" rx="104" fill="#15151F"/>
+    <rect x="300" y="300" width="372" height="372" rx="104" fill="none" stroke="url(#aurora)" stroke-width="7" stroke-opacity="0.85"/>
+  </g>
+
+  <!-- front card -->
+  <g transform="rotate(6 540 540)">
+    <rect x="338" y="338" width="384" height="384" rx="112" fill="url(#aurora)"/>
+    <!-- play triangle (watch your recap) -->
+    <path d="M 498 452 L 498 628 L 648 540 Z" fill="#0B0B12"/>
+  </g>
+</svg>

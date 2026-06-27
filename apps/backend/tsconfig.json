@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "lib": ["ES2022"],
+    // Resolve the shared workspace to its TS source. The backend runs via `tsx`
+    // (which transpiles TS + this workspace package on the fly), so there is no
+    // emit step and no rootDir constraint to satisfy.
+    "paths": {
+      "@endcard/shared": ["../../packages/shared/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

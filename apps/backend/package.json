@@ -1,0 +1,35 @@
+{
+  "name": "@endcard/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Endcard secure backend. Owns all third-party API calls and secrets; the app never holds a backend secret or a raw platform credential.",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "gen:keys": "tsx src/scripts/genKeys.ts"
+  },
+  "dependencies": {
+    "@endcard/shared": "*",
+    "@supabase/supabase-js": "^2.45.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "pino": "^9.4.0",
+    "pino-http": "^10.3.0",
+    "psn-api": "^2.18.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^20.16.10",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

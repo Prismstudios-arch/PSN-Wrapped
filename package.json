@@ -1,0 +1,21 @@
+{
+  "name": "endcard",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Endcard — an unofficial year-in-review for your gaming history. Not affiliated with or endorsed by Sony Interactive Entertainment.",
+  "workspaces": [
+    "packages/*",
+    "apps/backend",
+    "apps/mobile"
+  ],
+  "scripts": {
+    "shared:build": "npm run build -w @endcard/shared",
+    "backend:dev": "npm run dev -w @endcard/backend",
+    "backend:typecheck": "npm run typecheck -w @endcard/backend",
+    "mobile:start": "npm run start -w @endcard/mobile",
+    "typecheck": "npm run typecheck -w @endcard/shared && npm run typecheck -w @endcard/backend"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

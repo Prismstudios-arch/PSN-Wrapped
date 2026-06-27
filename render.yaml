@@ -1,0 +1,33 @@
+# Render.com blueprint for the PSN Wrapped backend.
+# One-click: push this repo to GitHub → render.com → New → Blueprint → pick the repo.
+# Then set the `sync: false` secrets in the Render dashboard (they're not committed).
+services:
+  - type: web
+    name: psn-wrapped-backend
+    runtime: node
+    plan: free # note: free dynos sleep after ~15 min idle → first request is slow
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm run start -w @endcard/backend
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: AI_PROVIDER
+        value: groq
+      # TestFlight: lets testers unlock Pro without real IAP. Set to "false" for a paid launch.
+      - key: ALLOW_DEV_PRO
+        value: "true"
+      # Secrets — set these in the Render dashboard (do NOT commit):
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: TOKEN_ENC_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
