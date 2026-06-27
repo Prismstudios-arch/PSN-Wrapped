@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "896d82a3-4ffe-41b7-adb3-5f5b9acfb17d"
+      }
+    },
+    "owner": "jonnywilson",
+    "ios": {
+      "bundleIdentifier": "com.psnwrapped.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
+  }
+}

@@ -1,9 +1,8 @@
 // Metro config for an Expo app inside an npm-workspaces monorepo.
-// Teaches Metro to watch the repo root (for @endcard/shared) and to resolve
-// modules from both the app and the hoisted root node_modules. Then wraps the
-// config with NativeWind's transformer.
+// Watches the repo root (for @endcard/shared) and resolves modules from both
+// the app and the hoisted root node_modules. projectRoot is pinned to this
+// folder via __dirname so it's correct even when EAS bundles from the repo root.
 const { getDefaultConfig } = require('expo/metro-config');
-const { withNativeWind } = require('nativewind/metro');
 const path = require('node:path');
 
 const projectRoot = __dirname;
@@ -18,4 +17,4 @@ config.resolver.nodeModulesPaths = [
 ];
 config.resolver.disableHierarchicalLookup = true;
 
-module.exports = withNativeWind(config, { input: './global.css' });
+module.exports = config;
