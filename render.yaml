@@ -7,7 +7,9 @@ services:
     runtime: node
     plan: free # note: free dynos sleep after ~15 min idle → first request is slow
     rootDir: .
-    buildCommand: npm install
+    # --include=dev forces devDependencies (tsx, typescript) to install even
+    # though NODE_ENV=production, otherwise the `tsx` start command is missing.
+    buildCommand: npm install --include=dev
     startCommand: npm run start -w @endcard/backend
     healthCheckPath: /health
     envVars:
