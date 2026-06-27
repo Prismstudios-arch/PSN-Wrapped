@@ -1,4 +1,12 @@
-import {
+import * as psnApiNS from 'psn-api';
+import type { AuthorizationPayload } from 'psn-api';
+import { ConnectorAuthError, ConnectorError } from '@endcard/shared';
+
+// CJS/ESM interop: psn-api ships as CommonJS, and Node's static detection of its
+// named exports differs by version (works on Node 24, fails on Node 20). Binding
+// the functions at runtime from the module's default/namespace works everywhere.
+const psnApi = (psnApiNS as unknown as { default?: typeof psnApiNS }).default ?? psnApiNS;
+const {
   exchangeAccessCodeForAuthTokens,
   exchangeNpssoForAccessCode,
   exchangeRefreshTokenForAuthTokens,
@@ -8,9 +16,7 @@ import {
   getUserTitles,
   getUserTrophiesEarnedForTitle,
   getUserTrophyProfileSummary,
-  type AuthorizationPayload,
-} from 'psn-api';
-import { ConnectorAuthError, ConnectorError } from '@endcard/shared';
+} = psnApi;
 
 /**
  * Thin wrapper around `psn-api` that:
