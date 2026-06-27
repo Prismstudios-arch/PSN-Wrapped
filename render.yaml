@@ -13,8 +13,10 @@ services:
     startCommand: npm run start -w @endcard/backend
     healthCheckPath: /health
     envVars:
+      # Node 24 to match local dev — some deps (psn-api, pino) only expose their
+      # named exports cleanly on Node 22+; Node 20's module loader rejects them.
       - key: NODE_VERSION
-        value: "20"
+        value: "24"
       - key: NODE_ENV
         value: production
       - key: AI_PROVIDER
