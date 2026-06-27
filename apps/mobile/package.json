@@ -2,7 +2,7 @@
   "name": "@endcard/mobile",
   "version": "0.1.0",
   "private": true,
-  "main": "expo-router/entry",
+  "main": "index.js",
   "description": "Endcard mobile app (Expo SDK 56). Phase 1 ships config + a typed backend client only; UI begins in Phase 2.",
   "scripts": {
     "start": "expo start",
