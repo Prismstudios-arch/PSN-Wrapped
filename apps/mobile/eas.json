@@ -8,20 +8,20 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "API_BASE_URL": "https://REPLACE-with-your-backend-url"
+        "API_BASE_URL": "https://psn-wrapped-backend.onrender.com"
       }
     },
     "preview": {
       "distribution": "internal",
       "ios": { "simulator": false },
       "env": {
-        "API_BASE_URL": "https://REPLACE-with-your-backend-url"
+        "API_BASE_URL": "https://psn-wrapped-backend.onrender.com"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "API_BASE_URL": "https://REPLACE-with-your-backend-url"
+        "API_BASE_URL": "https://psn-wrapped-backend.onrender.com"
       }
     }
   },
