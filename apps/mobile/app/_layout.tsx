@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ThemeProvider, useThemeContext } from '@/theme/ThemeProvider';
 import { SessionProvider, useSession } from '@/state/session';
 import { ProProvider } from '@/state/pro';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
@@ -14,13 +15,15 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <ThemeProvider>
-          <SessionProvider>
-            <ProProvider>
-              <RootNavigator />
-            </ProProvider>
-          </SessionProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider>
+            <SessionProvider>
+              <ProProvider>
+                <RootNavigator />
+              </ProProvider>
+            </SessionProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
@@ -30,11 +33,16 @@ function RootNavigator() {
   const { ready } = useThemeContext();
   const { status } = useSession();
 
-  // Hide the native splash once theme prefs + session are resolved. The (tabs)
-  // guard renders nothing until then, so the splash covers the cold start.
+  // Hide the splash once theme + session resolve.
   useEffect(() => {
     if (ready && status !== 'loading') SplashScreen.hideAsync().catch(() => undefined);
   }, [ready, status]);
+
+  // Safety net: never let a stuck native call keep the splash up forever.
+  useEffect(() => {
+    const t = setTimeout(() => SplashScreen.hideAsync().catch(() => undefined), 4000);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <>

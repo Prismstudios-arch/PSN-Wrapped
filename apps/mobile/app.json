@@ -12,7 +12,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.psnwrapped.app",
-      "userInterfaceStyle": "dark"
+      "userInterfaceStyle": "dark",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.psnwrapped.app",

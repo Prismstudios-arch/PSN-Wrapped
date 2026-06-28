@@ -1,0 +1,188 @@
+================================================================================
+PSN WRAPPED — APP STORE PUBLISHING HANDOFF (for an AI assistant, e.g. Grok)
+================================================================================
+You are helping Jonny get an iOS app ("PSN Wrapped") from TestFlight to the
+public App Store. Below is everything you need: what the app is, its current
+state, the exact things that will get it REJECTED (read section 4 first), and the
+config you must NOT break (section 6). Jonny is on Windows, uses VS Code, and has
+an Apple Developer account with 2 apps already published.
+
+--------------------------------------------------------------------------------
+1. WHAT THE APP IS
+--------------------------------------------------------------------------------
+PSN Wrapped is an UNOFFICIAL "year-in-review" for PlayStation gaming history
+(Spotify-Wrapped style). The user connects their PlayStation account; the app
+shows total hours, top games, rarest trophies, a "when you game" heatmap, a gamer
+persona, opt-in AI commentary, milestones, friends + "recap battles", and lets
+them export a shareable image (square + 9:16). There's a Pro tier (paywall).
+
+It is NOT affiliated with or endorsed by Sony. "PlayStation Network" is referenced
+descriptively only. Brand identity is "Midnight Aurora" (near-black + violet/teal/
+pink gradient) — deliberately NOT PlayStation blue.
+
+--------------------------------------------------------------------------------
+2. CURRENT STATE (as of this handoff)
+--------------------------------------------------------------------------------
+- App is BUILT and on TestFlight via EAS Build + EAS Submit. It works end-to-end
+  against the real backend (connect PlayStation -> stats -> recap -> AI -> share).
+- A correctly-configured build (right name/icon, boots into onboarding) was just
+  rebuilt after fixing several monorepo/EAS config issues.
+- Backend is DEPLOYED and live (Render). Database is Supabase. AI is Groq (free).
+- The app is functional for TestFlight. It has NOT been submitted for App Store
+  REVIEW yet — that's the goal you're helping with.
+
+--------------------------------------------------------------------------------
+3. KEY FACTS / IDs (no secrets here — secrets live in apps/backend/.env, gitignored)
+--------------------------------------------------------------------------------
+- App display name (home screen / App Store): "PSN Wrapped"   <-- SEE RISK in #4
+- Bundle identifier: com.psnwrapped.app
+- App Store Connect app id: 6785297283
+  (https://appstoreconnect.apple.com/apps/6785297283)
+- Expo/EAS project: @jonnywilson/endcard  (id 896d82a3-4ffe-41b7-adb3-5f5b9acfb17d)
+  NOTE: the Expo project + internal "slug" are still named "endcard" (old
+  codename). This is INTERNAL ONLY — do not "fix" it to psn-wrapped (it will break
+  the EAS build; see section 6).
+- GitHub repo (private): github.com/jonnywilsonnn2012-maker/PSN-Wrapped
+- Backend (live): https://psn-wrapped-backend.onrender.com   (Render free tier —
+  it SLEEPS after ~15 min idle, so the first request takes ~50s; this matters for
+  App Store reviewers — see #4d).
+- Stack: Expo SDK 56 / React Native 0.85 / expo-router. npm-workspaces monorepo:
+  apps/mobile (the app), apps/backend (Node/Express, runs via tsx), packages/shared
+  (normalized model + PlatformConnector). Supabase (Postgres + RLS). PSN data via
+  the `psn-api` npm package (unofficial). AI via Groq (provider-agnostic service).
+- Build commands (run from apps/mobile):
+    eas build -p ios --profile production
+    eas submit -p ios --latest
+
+--------------------------------------------------------------------------------
+4. THE THINGS THAT WILL GET IT REJECTED — HANDLE THESE BEFORE SUBMITTING FOR REVIEW
+--------------------------------------------------------------------------------
+(4a) ** TRADEMARK — HIGHEST RISK / very likely rejection **
+   The name "PSN Wrapped" stacks TWO trademarks:
+     - "PSN" is Sony's mark (PlayStation Network). Using a platform's trademark in
+       an app NAME/icon is a common cause of App Store rejection + a Sony C&D.
+     - "Wrapped" is strongly associated with Spotify Wrapped.
+   STRONGLY recommend renaming to something trademark-free before public launch,
+   e.g. "Trophy Rewind", "Platinum Year", "PlayBack", "GG Year". The app's display
+   name is `name` in apps/mobile/app.json (and the root app.config.js reuses it).
+   The App Store Connect listing name is set separately in App Store Connect.
+   ACTION: advise Jonny to pick a cleared name; an IP lawyer review is wise.
+
+(4b) ** NON-FUNCTIONAL PAYWALL — guaranteed rejection if left as-is **
+   The app has a Pro paywall (app/paywall.tsx) showing prices (£24.99 lifetime /
+   £4.99 seasonal), but there is NO real in-app purchase wired up yet. Apple
+   REJECTS apps that display purchasable items without working StoreKit IAP.
+   Two options before App Store review:
+     (i) Wire real IAP via RevenueCat (react-native-purchases) + create the
+         products in App Store Connect, and set ALLOW_DEV_PRO=false on the backend
+         (Render env var). The backend already has a pro_status table + entitlement
+         endpoints; RevenueCat webhooks would write to it. OR
+     (ii) For a first release, REMOVE/hide the paywall pricing and ship the app
+         free (no Pro), then add IAP in a later version.
+   The dev Pro grant (POST /pro/activate, gated by ALLOW_DEV_PRO) is for TestFlight
+   only — it must be OFF for production.
+
+(4c) ** PSN Terms of Service / "uses another service without authorization" **
+   The app reads PlayStation data via an UNOFFICIAL API (psn-api) using a session
+   token (NPSSO) the user generates. This violates Sony's ToS and Apple reviewers
+   may reject under guidelines about using another platform's service without
+   permission, or about the token-based login. Mitigations to present:
+     - The app is clearly UNOFFICIAL with a visible "not affiliated with Sony"
+       disclaimer (already in onboarding/connect/settings).
+     - It is read-only and stores no password.
+   There is genuine review risk here; be honest with Jonny that it might be
+   rejected on this basis regardless of polish.
+
+(4d) ** REVIEWER ACCESS — the app needs a PlayStation account to do anything **
+   The core flow requires a PlayStation NPSSO token, which an Apple reviewer can't
+   easily obtain. You MUST make review possible:
+     - The onboarding shows a DEMO recap (fake data) BEFORE connecting — good, the
+       reviewer can see the app's value without connecting. Point this out in the
+       "App Review Information > Notes".
+     - Provide clear reviewer notes explaining the NPSSO step and that a demo is
+       shown first. Consider adding a "Skip / Try a demo" path that doesn't require
+       connecting, if not already obvious.
+     - The backend is on Render's FREE tier and SLEEPS — the first request takes
+       ~50s. A reviewer may think it's broken. Recommend upgrading Render to a paid
+       always-on instance (or at least warn in notes), OR add a friendly loading
+       state for cold starts.
+
+(4e) ** PRIVACY POLICY URL — required **
+   App Store requires a privacy policy URL. There isn't one yet. Need to host a
+   privacy policy (the content exists in docs/DATA_HANDLING.md in the repo — it can
+   be turned into a public web page). Also fill the App Privacy "nutrition labels"
+   accurately (see docs/PUBLISHING.md in the repo for the exact data-type table).
+
+(4f) Account deletion: REQUIRED by Apple and ALREADY BUILT — Settings ->
+   "Disconnect & delete everything" wipes tokens + stats (POST /account/disconnect).
+   Point this out; no work needed.
+
+--------------------------------------------------------------------------------
+5. APP STORE LISTING CHECKLIST (the normal submission work)
+--------------------------------------------------------------------------------
+In App Store Connect for app 6785297283:
+  [ ] App name (cleared trademark-free name — see 4a)
+  [ ] Subtitle, promotional text, description, keywords
+  [ ] Primary category (Entertainment or Utilities; "Games" is risky given 4c)
+  [ ] Screenshots (6.7" + 6.5" iPhone required). Capture from a TestFlight device:
+      onboarding/demo, dashboard, recap story, share card, friends/battles.
+  [ ] App icon 1024x1024 — already designed (apps/mobile/assets/icon.png).
+  [ ] Age rating questionnaire
+  [ ] Privacy policy URL (see 4e) + App Privacy data labels (see 4e / docs/PUBLISHING.md)
+  [ ] Pricing & availability (Free; or Free + IAP if 4b done)
+  [ ] App Review Information: demo notes (see 4d), and a note that it's unofficial
+      and not affiliated with Sony.
+  [ ] Export compliance (uses HTTPS only -> usually "no" to custom encryption)
+  [ ] Select the processed TestFlight build for the version, then Submit for Review.
+
+--------------------------------------------------------------------------------
+6. DO NOT BREAK THIS (hard-won monorepo + EAS config) — IMPORTANT FOR GROK
+--------------------------------------------------------------------------------
+This is an npm-workspaces monorepo, and EAS Build runs from the REPO ROOT (not
+apps/mobile). Getting it to build took fixing several things. DO NOT undo them:
+  - ROOT package.json: "name" MUST stay "endcard" (EAS uses it as the slug; it
+    must match the Expo project). "main" is "apps/mobile/index.js".
+  - ROOT metro.config.js and ROOT babel.config.js: they `require('./apps/mobile/
+    ...')` so the bundle uses the app's config from the repo root. Keep them.
+  - ROOT app.config.js: provides the full Expo config from the root (name, icon,
+    plugins, bundle id, extra) with asset paths pointing into apps/mobile. Without
+    it the build installs as "endcard" with a blank icon and a WHITE SCREEN.
+  - apps/mobile/index.js exists and is the entry (`import 'expo-router/entry'`).
+  - .nvmrc = 24 (Expo SDK 56 bundler needs Node 22+; Node 20 fails on EAS).
+  - NativeWind was REMOVED (app never used className; it broke the root bundle).
+    Do not re-add it.
+  - apps/mobile/app.json "slug" = "endcard" and extra.eas.projectId is set.
+  - To VERIFY the config EAS will read, run from the repo ROOT:
+        npx expo config --type public --json
+    It should show name "PSN Wrapped", the icon path, all 3 plugins, the dark
+    splash, bundle id com.psnwrapped.app, and extra.eas.projectId.
+  - To REPRODUCE the EAS JS bundle locally (catches "works locally, fails on EAS"
+    issues), run from the repo ROOT:
+        npx expo export:embed --eager --platform ios --dev false \
+          --bundle-output ./_o/main.jsbundle --assets-dest ./_o/assets
+    It should bundle ~1650 modules with EXIT 0.
+
+--------------------------------------------------------------------------------
+7. USEFUL REPO DOCS
+--------------------------------------------------------------------------------
+  - docs/PUBLISHING.md  — App Store checklist incl. the exact privacy-label table
+  - docs/DATA_HANDLING.md — user-facing data disclosure (basis for privacy policy)
+  - docs/TESTFLIGHT.md  — the build/deploy runbook
+  - docs/ARCHITECTURE.md — how the platform-agnostic connector design works
+  - README.md — overview + the trademark warning
+
+--------------------------------------------------------------------------------
+8. SUGGESTED ORDER OF WORK FOR GROK
+--------------------------------------------------------------------------------
+  1. Decide & set a trademark-safe app NAME (4a). This unblocks the listing.
+  2. Decide on the paywall (4b): wire RevenueCat IAP, OR ship free without Pro for v1.
+  3. Host a privacy policy page; get the URL (4e).
+  4. Upgrade Render to always-on OR prepare reviewer notes about cold starts (4d).
+  5. Fill the App Store Connect listing (section 5): screenshots, description,
+     privacy labels, age rating, reviewer notes (unofficial + demo path + NPSSO).
+  6. Set ALLOW_DEV_PRO=false on the backend if Pro/IAP is live.
+  7. Select the latest processed build and Submit for Review.
+  8. Be ready for a possible rejection on 4a or 4c and have a plan (rename / appeal /
+     reposition as a generic "gaming recap" tool).
+
+End of handoff.
