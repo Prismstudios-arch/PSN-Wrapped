@@ -47,6 +47,9 @@
     },
     "extra": {
       "apiBaseUrl": "http://localhost:4000",
+      "eas": {
+        "projectId": "896d82a3-4ffe-41b7-adb3-5f5b9acfb17d"
+      },
       "_comment_brand": "PSN Wrapped has its OWN identity (Midnight Aurora). Do NOT use PlayStation brand blue/logos. Icon/splash assets still to be designed.",
       "_comment_disclaimer": "Not affiliated with or endorsed by Sony Interactive Entertainment."
     }
