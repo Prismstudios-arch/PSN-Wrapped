@@ -1,5 +1,5 @@
 {
-  "name": "psn-wrapped",
+  "name": "endcard",
   "private": true,
   "version": "0.1.0",
   "main": "apps/mobile/index.js",
