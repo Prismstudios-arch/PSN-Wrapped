@@ -8,7 +8,9 @@ import { ThemeProvider, useThemeContext } from '@/theme/ThemeProvider';
 import { SessionProvider, useSession } from '@/state/session';
 import { ProProvider } from '@/state/pro';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { beacon } from '@/lib/beacon';
 
+beacon('boot:layout-module-loaded');
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 export default function RootLayout() {
@@ -32,6 +34,11 @@ export default function RootLayout() {
 function RootNavigator() {
   const { ready } = useThemeContext();
   const { status } = useSession();
+
+  // Trace post-mount boot state to the backend (diagnostic).
+  useEffect(() => {
+    beacon('boot:nav', { ready, status });
+  }, [ready, status]);
 
   // Hide the splash once theme + session resolve.
   useEffect(() => {

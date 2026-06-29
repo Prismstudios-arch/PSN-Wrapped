@@ -14,6 +14,7 @@ import { healthRouter } from './routes/health.js';
 import { recapRouter } from './routes/recap.js';
 import { friendsRouter } from './routes/friends.js';
 import { proRouter } from './routes/pro.js';
+import { debugRouter } from './routes/debug.js';
 
 /** Build the configured Express app (no `listen`, so it's testable in isolation). */
 export function createApp(): Express {
@@ -50,6 +51,7 @@ export function createApp(): Express {
   app.use('/recap', recapRouter);
   app.use('/friends', friendsRouter);
   app.use('/pro', proRouter);
+  app.use('/debug', debugRouter);
 
   // 404 → structured error.
   app.use((req, _res, next) => {
